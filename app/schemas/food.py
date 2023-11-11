@@ -6,6 +6,7 @@ from .general import Response
 from app.models.food import FoodType, Food as FoodModel
 
 from tortoise.contrib.pydantic import pydantic_model_creator
+from decimal import Decimal
 
 # create pydantic model for FoodModel using create_tortoise_model
 FoodModel = pydantic_model_creator(
@@ -30,3 +31,7 @@ class FoodSearchResponse(Response):
 
 class FoodCreateRequest(Food):
     type: FoodType
+
+
+class TotalCaloriesResponse(Response):
+    total_calories: Decimal

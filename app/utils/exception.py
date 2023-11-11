@@ -15,6 +15,7 @@ exception_codes = {
     "E1003": "Invalid phone number",
     "E1004": "Invalid email",
     "E1005": "Invalid password",
+    "E1006": "Invalid Muscle Group. Must be either back, arms, legs, chest, or abs",
     "E1007": "Invalid token",
     "E1008": "Invalid refresh token",
     "E1009": "Invalid user",

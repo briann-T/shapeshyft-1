@@ -4,6 +4,7 @@ from app.schemas.food import (
     FoodSearchResponse,
     FoodCreateRequest,
     FoodModel as FoodModelSchema,
+    TotalCaloriesResponse,
 )
 from typing import Annotated
 from app.services.auth.utils import get_current_user
@@ -13,6 +14,7 @@ from app.utils.exception import ShapeShyftException
 from app.services.auth import hash_password
 from fatsecret import Fatsecret
 from app.models.user import UserAccount
+from decimal import Decimal
 
 fs = Fatsecret("0047da412ebd469c9dd1895c7d3159d8", "2f91d6bcbaa94e72bea327eb4d6b0546")
 # create a search endpoint
@@ -68,6 +70,24 @@ async def search_food_database(
 
     foods = FoodSearchResponse(items=foods_array)
     return foods
+
+
+# get sum of all calories for user
+@router.get("/totalCalories", response_model=TotalCaloriesResponse, responses=responses)
+async def get_sum_of_calories_for_user(
+    current_user: UserAccount = Security(get_current_user),
+):
+    """
+    This endpoint gets the sum of all calories for the user
+    """
+    foods = await FoodModel.all().filter(user=current_user)
+    calories = Decimal(0.0)
+    for food in foods:
+        try:
+            calories += Decimal(food.calories) * Decimal(food.number_of_units)
+        except Exception as e:
+            print(e)
+    return TotalCaloriesResponse(total_calories=calories)
 
 
 # get all by type
